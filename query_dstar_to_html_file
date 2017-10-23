@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# This will generate 2 files - one with all registered users
+# the other file will contain the new users that have registered
+# but not yet approved
+#
+# The new file will be picked up from the www.zackburns.com machine
+# and processed at the top of the hour and if new users are in
+# the file, I will send an email/text alert so I can process them
+#
+# The following lives in the "query_dstar_to_html_file" bash script.
+# It is then called via a cronjob every 5 minutes.
+#
+
+/opt/products/dstar/pgsql/bin/psql -U dstar -d dstar_global -c "SELECT mod_date, reg_date, user_cs, user_name, e_mail FROM unsync_user_mng WHERE regist_flg='t' ORDER BY reg_date" > w8hhf_dstar_users_current.txt
+/opt/products/dstar/pgsql/bin/psql -U dstar -d dstar_global -c "SELECT mod_date, reg_date, user_cs, user_name, e_mail FROM unsync_user_mng WHERE regist_flg='f' ORDER BY reg_date" > w8hhf_dstar_users_new.txt
+
